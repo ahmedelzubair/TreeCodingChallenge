@@ -2,28 +2,26 @@ package sa.com.tree.account.statment.treecodingchallenge.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.service.StatementService;
 import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/statements")
-public class StatementController {
+@RequestMapping("/api/v1/account")
+public class AccountStatementController {
 
 
     private final StatementService statementService;
 
-    @GetMapping("/")
+    @GetMapping("/{accountId}/statements")
     public ResponseEntity<ApiResponse> getStatementsForAccount(
-            @RequestParam("accountId") Long accountId,
+            @PathVariable("accountId") Long accountId,
             @RequestParam(value = "fromDate", required = false) String fromDate,
             @RequestParam(value = "toDate", required = false) String toDate,
             @RequestParam(value = "fromAmount", required = false) String fromAmount,
@@ -36,7 +34,11 @@ public class StatementController {
                 .toAmount(toAmount)
                 .build();
         List<StatementDTO> statements = statementService.getStatementsByCriteria(searchCriteriaDTO);
-        ApiResponse apiResponse = ApiResponse.builder().status(200).message("Success").data(statements).build();
+        ApiResponse apiResponse = ApiResponse.builder().status(200)
+                .timestamp(LocalDateTime.now())
+                .message("Successfully retrieved account statements")
+                .data(statements)
+                .build();
         return ResponseEntity.ok(apiResponse);
     }
 
