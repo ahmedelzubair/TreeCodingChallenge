@@ -2,13 +2,12 @@ package sa.com.tree.account.statment.treecodingchallenge.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
 import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
-import sa.com.tree.account.statment.treecodingchallenge.mapper.StatementMapper;
+import sa.com.tree.account.statment.treecodingchallenge.repository.StatementJDBCRepository;
 import sa.com.tree.account.statment.treecodingchallenge.utils.SearchUtils;
 import sa.com.tree.account.statment.treecodingchallenge.validators.SearchCriteriaValidator;
 
@@ -23,21 +22,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StatementService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final StatementJDBCRepository statementJDBCRepository;
     private final SearchCriteriaValidator searchCriteriaValidator;
 
     public List<StatementDTO> getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         searchCriteriaValidator.validate(searchCriteriaDTO);
 
-        List<Statement> allStatements = fetchAllStatements(searchCriteriaDTO.getAccountId());
+        List<Statement> allStatements = statementJDBCRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
         List<Statement> filteredStatements = filterStatements(allStatements, searchCriteriaDTO);
 
         return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);
-    }
-
-    private List<Statement> fetchAllStatements(Long accountId) {
-        String sql = "SELECT * FROM Statement WHERE account_id = ?";
-        return jdbcTemplate.query(sql, new StatementMapper(), accountId);
     }
 
     private List<Statement> filterStatements(List<Statement> statements, SearchCriteriaDTO searchCriteriaDTO) {
