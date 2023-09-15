@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
 public class Account {
     private Long id;
     private String accountType;
