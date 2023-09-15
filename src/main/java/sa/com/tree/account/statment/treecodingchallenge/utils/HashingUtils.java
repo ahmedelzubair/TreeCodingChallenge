@@ -1,20 +1,21 @@
 package sa.com.tree.account.statment.treecodingchallenge.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import sa.com.tree.account.statment.treecodingchallenge.exception.HashingException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 public class HashingUtils {
 
-    public static String hashAccountNumber(String accountNumber) {
+    public static String hash(Long accountNumber) {
         try {
+            if (accountNumber == null) {
+                throw new HashingException("Account number is null");
+            }
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(accountNumber.getBytes(StandardCharsets.UTF_8));
+            byte[] hashBytes = digest.digest(String.valueOf(accountNumber).getBytes(StandardCharsets.UTF_8));
             return bytesToHex(hashBytes);
         } catch (Exception e) {
             log.error("[HashingUtils] Error while hashing account number: {} , error: {}", accountNumber, e.getMessage());
