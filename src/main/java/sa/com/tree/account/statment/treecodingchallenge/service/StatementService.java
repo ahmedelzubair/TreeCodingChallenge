@@ -15,7 +15,6 @@ import sa.com.tree.account.statment.treecodingchallenge.validators.SearchCriteri
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,35 +41,25 @@ public class StatementService {
     }
 
     private List<Statement> filterStatements(List<Statement> statements, SearchCriteriaDTO searchCriteriaDTO) {
-        // Check if no parameters are specified, then return three months back statement
-        if (SearchUtils.isEmptySearchCriteria(searchCriteriaDTO)) {
-            LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
-            return statements.stream()
-                    .filter(statement -> LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-                            .isAfter(threeMonthsAgo))
-                    .collect(Collectors.toList());
-        }
-
         LocalDate fromDate = SearchUtils.parseDate(searchCriteriaDTO.getFromDate());
         LocalDate toDate = SearchUtils.parseDate(searchCriteriaDTO.getToDate());
         BigDecimal fromAmount = SearchUtils.parseAmount(searchCriteriaDTO.getFromAmount());
         BigDecimal toAmount = SearchUtils.parseAmount(searchCriteriaDTO.getToAmount());
 
-        List<Statement> filteredStatements = new ArrayList<>();
+        return statements.stream()
+                .filter(statement -> isStatementInDateRange(statement, fromDate, toDate) &&
+                        isStatementInAmountRange(statement, fromAmount, toAmount))
+                .collect(Collectors.toList());
+    }
 
-        for (Statement statement : statements) {
-            LocalDate statementDate = SearchUtils.parseDate(statement.getDateField());
-            BigDecimal statementAmount = SearchUtils.parseAmount(statement.getAmount());
+    private boolean isStatementInDateRange(Statement statement, LocalDate fromDate, LocalDate toDate) {
+        LocalDate statementDate = LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return statementDate.isAfter(fromDate.minusDays(1)) && statementDate.isBefore(toDate.plusDays(1));
+    }
 
-            boolean dateInRange = statementDate.isAfter(fromDate.minusDays(1)) && statementDate.isBefore(toDate.plusDays(1));
-            boolean amountInRange = statementAmount.compareTo(fromAmount) >= 0 && statementAmount.compareTo(toAmount) <= 0;
-
-            if (dateInRange && amountInRange) {
-                filteredStatements.add(statement);
-            }
-        }
-
-        return filteredStatements;
+    private boolean isStatementInAmountRange(Statement statement, BigDecimal fromAmount, BigDecimal toAmount) {
+        BigDecimal statementAmount = SearchUtils.parseAmount(statement.getAmount());
+        return statementAmount.compareTo(fromAmount) >= 0 && statementAmount.compareTo(toAmount) <= 0;
     }
 
 }
