@@ -10,10 +10,11 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class StatementJDBCRepository {
+public class StatementJDBCRepository implements StatementRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    @Override
     public List<Statement> findAllStatementsByAccountId(Long accountId) {
         String sql = "SELECT * FROM Statement WHERE account_id = ?";
         return jdbcTemplate.query(sql, new StatementMapper(), accountId);

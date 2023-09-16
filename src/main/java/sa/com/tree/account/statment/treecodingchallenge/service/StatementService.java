@@ -7,7 +7,7 @@ import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
 import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
-import sa.com.tree.account.statment.treecodingchallenge.repository.StatementJDBCRepository;
+import sa.com.tree.account.statment.treecodingchallenge.repository.StatementRepository;
 import sa.com.tree.account.statment.treecodingchallenge.utils.SearchUtils;
 import sa.com.tree.account.statment.treecodingchallenge.validators.SearchCriteriaValidator;
 
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StatementService {
 
-    private final StatementJDBCRepository statementJDBCRepository;
+    private final StatementRepository statementRepository;
     private final SearchCriteriaValidator searchCriteriaValidator;
 
     public List<StatementDTO> getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         searchCriteriaValidator.validate(searchCriteriaDTO);
 
-        List<Statement> allStatements = statementJDBCRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
+        List<Statement> allStatements = statementRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
         List<Statement> filteredStatements = filterStatements(allStatements, searchCriteriaDTO);
 
         return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);
