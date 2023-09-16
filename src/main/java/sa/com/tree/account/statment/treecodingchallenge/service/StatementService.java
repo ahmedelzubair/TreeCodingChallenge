@@ -48,16 +48,12 @@ public class StatementService {
 
     private boolean isStatementInDateRange(Statement statement, LocalDate fromDate, LocalDate toDate) {
         LocalDate statementDate = LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        boolean isStatementInDateRange = statementDate.isAfter(fromDate.minusDays(1)) && statementDate.isBefore(toDate.plusDays(1));
-        log.info("Statement date: {}, from date: {}, to date: {}, isStatementInDateRange: {}", statementDate, fromDate, toDate, isStatementInDateRange);
-        return isStatementInDateRange;
+        return statementDate.isAfter(fromDate.minusDays(1)) && statementDate.isBefore(toDate.plusDays(1));
     }
 
     private boolean isStatementInAmountRange(Statement statement, BigDecimal fromAmount, BigDecimal toAmount) {
         BigDecimal statementAmount = SearchUtils.parseAmount(statement.getAmount());
-        boolean isStatementInAmountRange = statementAmount.compareTo(fromAmount) >= 0 && statementAmount.compareTo(toAmount) <= 0;
-        log.info("Statement amount: {}, from amount: {}, to amount: {}, isStatementInAmountRange: {}", statementAmount, fromAmount, toAmount, isStatementInAmountRange);
-        return isStatementInAmountRange;
+        return statementAmount.compareTo(fromAmount) >= 0 && statementAmount.compareTo(toAmount) <= 0;
     }
 
 }
