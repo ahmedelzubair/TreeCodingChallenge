@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import sa.com.tree.account.statment.treecodingchallenge.exception.HashingException;
 import sa.com.tree.account.statment.treecodingchallenge.exception.InvalidSearchCriteriaException;
 import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
@@ -47,6 +48,17 @@ public class AppExceptionHandler {
                 .status(400)
                 .timestamp(LocalDateTime.now())
                 .message(invalidSearchCriteriaException.getMessage())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
+        log.error("[MethodArgumentTypeMismatchException] Invalid search criteria with message : {}", methodArgumentTypeMismatchException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(400)
+                .timestamp(LocalDateTime.now())
+                .message("Invalid search criteria")
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }

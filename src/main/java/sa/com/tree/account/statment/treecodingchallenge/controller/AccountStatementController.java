@@ -10,7 +10,7 @@ import sa.com.tree.account.statment.treecodingchallenge.service.StatementService
 import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -34,10 +34,10 @@ public class AccountStatementController {
                 .fromAmount(fromAmount)
                 .toAmount(toAmount)
                 .build();
-        List<StatementDTO> statements = statementService.getStatementsByCriteria(searchCriteriaDTO);
+        Set<StatementDTO> statements = statementService.getStatementsByCriteria(searchCriteriaDTO);
         ApiResponse apiResponse = ApiResponse.builder().status(200)
                 .timestamp(LocalDateTime.now())
-                .message("Successfully retrieved account statements")
+                .message(!statements.isEmpty() ? "Successfully retrieved account statements" : "No statements found")
                 .data(statements)
                 .build();
         return ResponseEntity.ok(apiResponse);

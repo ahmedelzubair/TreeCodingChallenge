@@ -15,7 +15,7 @@ public class ApiResponse {
 
     private int status;
     private String message;
-    private Object data;
     private LocalDateTime timestamp;
+    private Object data;
 
 }

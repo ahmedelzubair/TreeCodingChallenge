@@ -4,15 +4,15 @@ import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
 import sa.com.tree.account.statment.treecodingchallenge.utils.HashingUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MappingHelper {
 
 
-    public static List<StatementDTO> hashAccountIdAndMapQueryResult(List<Statement> statements) {
+    public static Set<StatementDTO> hashAccountIdAndMapQueryResult(Set<Statement> statements) {
         // Map and hash the account id before returning the result as StatementDTO
-        List<StatementDTO> statementDTOs = new ArrayList<>();
+        Set<StatementDTO> statementDTOs = new HashSet<>();
         for (Statement statement : statements) {
             StatementDTO statementDTO = new StatementDTO();
             statementDTO.setId(statement.getId());
