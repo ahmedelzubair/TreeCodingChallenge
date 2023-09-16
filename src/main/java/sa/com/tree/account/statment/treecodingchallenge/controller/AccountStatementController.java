@@ -1,6 +1,7 @@
 package sa.com.tree.account.statment.treecodingchallenge.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
@@ -21,7 +22,7 @@ public class AccountStatementController {
 
     @GetMapping("/{accountId}/statements")
     public ResponseEntity<ApiResponse> getStatementsForAccount(
-            @PathVariable("accountId") Long accountId,
+            @PathVariable("accountId") @NonNull Long accountId,
             @RequestParam(value = "fromDate", required = false) String fromDate,
             @RequestParam(value = "toDate", required = false) String toDate,
             @RequestParam(value = "fromAmount", required = false) String fromAmount,

@@ -10,6 +10,6 @@ public class StatementDTO {
 
     private Long id;
     private String accountId;
-    private String dateField;
+    private String statementDate;
     private String amount;
 }

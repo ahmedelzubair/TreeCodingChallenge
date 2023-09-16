@@ -17,7 +17,7 @@ public class MappingHelper {
             StatementDTO statementDTO = new StatementDTO();
             statementDTO.setId(statement.getId());
             statementDTO.setAccountId(HashingUtils.hash(statement.getAccountId()));
-            statementDTO.setDateField(statement.getDateField());
+            statementDTO.setStatementDate(statement.getDateField());
             statementDTO.setAmount(statement.getAmount());
             statementDTOs.add(statementDTO);
         }
