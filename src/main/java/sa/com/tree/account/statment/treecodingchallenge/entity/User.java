@@ -1,4 +1,4 @@
-package sa.com.tree.account.statment.treecodingchallenge.dto;
+package sa.com.tree.account.statment.treecodingchallenge.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sa.com.tree.account.statment.treecodingchallenge.dto.Role;
 
 import java.util.Collection;
 import java.util.List;

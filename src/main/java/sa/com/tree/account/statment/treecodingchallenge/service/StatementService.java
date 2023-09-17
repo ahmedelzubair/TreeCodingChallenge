@@ -11,7 +11,7 @@ import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
 import sa.com.tree.account.statment.treecodingchallenge.repository.StatementRepository;
 import sa.com.tree.account.statment.treecodingchallenge.utils.DateUtils;
 import sa.com.tree.account.statment.treecodingchallenge.utils.SearchUtils;
-import sa.com.tree.account.statment.treecodingchallenge.validators.SearchCriteriaValidator;
+import sa.com.tree.account.statment.treecodingchallenge.validator.SearchCriteriaValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

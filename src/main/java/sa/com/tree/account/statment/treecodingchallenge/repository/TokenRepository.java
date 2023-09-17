@@ -1,6 +1,6 @@
 package sa.com.tree.account.statment.treecodingchallenge.repository;
 
-import sa.com.tree.account.statment.treecodingchallenge.dto.Token;
+import sa.com.tree.account.statment.treecodingchallenge.entity.Token;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package sa.com.tree.account.statment.treecodingchallenge.validators;
+package sa.com.tree.account.statment.treecodingchallenge.validator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

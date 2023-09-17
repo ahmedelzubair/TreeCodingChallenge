@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-import sa.com.tree.account.statment.treecodingchallenge.dto.Token;
+import sa.com.tree.account.statment.treecodingchallenge.entity.Token;
 import sa.com.tree.account.statment.treecodingchallenge.exception.InvalidJWTException;
 import sa.com.tree.account.statment.treecodingchallenge.exception.LogoutException;
 import sa.com.tree.account.statment.treecodingchallenge.repository.TokenRepository;

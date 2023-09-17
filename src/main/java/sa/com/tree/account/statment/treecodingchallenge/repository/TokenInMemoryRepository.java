@@ -1,7 +1,7 @@
 package sa.com.tree.account.statment.treecodingchallenge.repository;
 
 import org.springframework.stereotype.Repository;
-import sa.com.tree.account.statment.treecodingchallenge.dto.Token;
+import sa.com.tree.account.statment.treecodingchallenge.entity.Token;
 
 import java.util.HashMap;
 import java.util.List;
