@@ -1,24 +1,22 @@
 package sa.com.tree.account.statment.treecodingchallenge.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
-import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
-import sa.com.tree.account.statment.treecodingchallenge.service.StatementService;
+import sa.com.tree.account.statment.treecodingchallenge.service.AccountStatementService;
+import sa.com.tree.account.statment.treecodingchallenge.service.AuthorizationChecker;
 import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/account")
 public class AccountStatementController {
 
-
-    private final StatementService statementService;
+    private final AccountStatementService accountStatementService;
+    private final AuthorizationChecker authorizationChecker;
 
     @GetMapping("/{accountId}/statements")
     public ResponseEntity<ApiResponse> getStatementsForAccount(
@@ -26,22 +24,19 @@ public class AccountStatementController {
             @RequestParam(value = "fromDate", required = false) String fromDate,
             @RequestParam(value = "toDate", required = false) String toDate,
             @RequestParam(value = "fromAmount", required = false) String fromAmount,
-            @RequestParam(value = "toAmount", required = false) String toAmount) {
-        SearchCriteriaDTO searchCriteriaDTO = SearchCriteriaDTO.builder()
-                .accountId(accountId)
-                .fromDate(fromDate)
-                .toDate(toDate)
-                .fromAmount(fromAmount)
-                .toAmount(toAmount)
-                .build();
-        Set<StatementDTO> statements = statementService.getStatementsByCriteria(searchCriteriaDTO);
-        ApiResponse apiResponse = ApiResponse.builder().status(200)
-                .timestamp(LocalDateTime.now())
-                .message(!statements.isEmpty() ? "Successfully retrieved account statements" : "No statements found")
-                .data(statements)
-                .build();
-        return ResponseEntity.ok(apiResponse);
+            @RequestParam(value = "toAmount", required = false) String toAmount,
+            Authentication authentication) {
+
+        if (authorizationChecker.isAdmin(authentication)) {
+            return accountStatementService.handleAdminRequest(accountId, fromDate, toDate, fromAmount, toAmount);
+        } else if (authorizationChecker.isUser(authentication)) {
+            if (fromDate != null || toDate != null || fromAmount != null || toAmount != null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            } else {
+                return accountStatementService.handleUserRequest(accountId);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
-
-
 }

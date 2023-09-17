@@ -1,6 +1,5 @@
 package sa.com.tree.account.statment.treecodingchallenge.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

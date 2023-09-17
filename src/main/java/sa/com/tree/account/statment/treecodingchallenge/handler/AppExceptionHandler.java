@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import sa.com.tree.account.statment.treecodingchallenge.exception.HashingException;
-import sa.com.tree.account.statment.treecodingchallenge.exception.InvalidSearchCriteriaException;
+import sa.com.tree.account.statment.treecodingchallenge.exception.*;
 import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     protected ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
-        log.error("[MethodArgumentNotValidException] DTO properties validation fails with message : {}", ex.getMessage());
+        log.error("[MethodArgumentNotValidException] DTO properties validation failed with message : {}", ex.getMessage());
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(400)
                 .timestamp(LocalDateTime.now())
@@ -32,7 +31,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(HashingException.class)
     public ResponseEntity<ApiResponse> handleHashingException(HashingException hashingException) {
-        log.error("[HashingException] Hashing fails with message : {}", hashingException.getMessage());
+        log.error("[HashingException] Hashing failed with message : {}", hashingException.getMessage());
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(500)
                 .timestamp(LocalDateTime.now())
@@ -43,7 +42,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(InvalidSearchCriteriaException.class)
     public ResponseEntity<ApiResponse> handleInvalidSearchCriteriaException(InvalidSearchCriteriaException invalidSearchCriteriaException) {
-        log.error("[InvalidSearchCriteriaException] Invalid search criteria with message : {}", invalidSearchCriteriaException.getMessage());
+        log.error(("[InvalidSearchCriteriaException] Search criteria validation failed with message : {}"), invalidSearchCriteriaException.getMessage());
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(400)
                 .timestamp(LocalDateTime.now())
@@ -54,7 +53,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException methodArgumentTypeMismatchException) {
-        log.error("[MethodArgumentTypeMismatchException] Invalid search criteria with message : {}", methodArgumentTypeMismatchException.getMessage());
+        log.error("[MethodArgumentTypeMismatchException] Search criteria validation failed with message : {}", methodArgumentTypeMismatchException.getMessage());
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(400)
                 .timestamp(LocalDateTime.now())
@@ -62,4 +61,49 @@ public class AppExceptionHandler {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserAlreadyLoggedInException.class)
+    public ResponseEntity<ApiResponse> handleUserAlreadyLoggedInException(UserAlreadyLoggedInException userAlreadyLoggedInException) {
+        log.error("[UserAlreadyLoggedInException] User logging in failed with message : {}", userAlreadyLoggedInException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(400)
+                .timestamp(LocalDateTime.now())
+                .message(userAlreadyLoggedInException.getMessage())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidJWTException.class)
+    public ResponseEntity<ApiResponse> handleInvalidJWTException(InvalidJWTException invalidJWTException) {
+        log.error("[InvalidJWTException] JWT validation failed with message : {}", invalidJWTException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(403)
+                .timestamp(LocalDateTime.now())
+                .message(invalidJWTException.getMessage())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(LogoutException.class)
+    public ResponseEntity<ApiResponse> handleLogoutException(LogoutException logoutException) {
+        log.error("[LogoutException] Logout failed with message : {}", logoutException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(500)
+                .timestamp(LocalDateTime.now())
+                .message(logoutException.getMessage())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<ApiResponse> handleLoginException(LoginException loginException) {
+        log.error("[LoginException] Login failed with message : {}", loginException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(403)
+                .timestamp(LocalDateTime.now())
+                .message(loginException.getMessage())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+    }
+
 }

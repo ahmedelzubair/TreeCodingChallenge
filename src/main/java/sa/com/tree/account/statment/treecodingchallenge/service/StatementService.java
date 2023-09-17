@@ -9,6 +9,7 @@ import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
 import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
 import sa.com.tree.account.statment.treecodingchallenge.repository.StatementRepository;
+import sa.com.tree.account.statment.treecodingchallenge.utils.DateUtils;
 import sa.com.tree.account.statment.treecodingchallenge.utils.SearchUtils;
 import sa.com.tree.account.statment.treecodingchallenge.validators.SearchCriteriaValidator;
 
@@ -26,8 +27,6 @@ public class StatementService {
 
     private final StatementRepository statementRepository;
     private final SearchCriteriaValidator searchCriteriaValidator;
-
-    private static final String DATE_FORMAT = "dd.MM.yyyy";
 
     public Set<StatementDTO> getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         searchCriteriaValidator.validate(searchCriteriaDTO);
@@ -97,12 +96,19 @@ public class StatementService {
     }
 
     private boolean isStatementInDateRange(Statement statement, LocalDate fromDate, LocalDate toDate) {
-        LocalDate statementDate = LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern(DATE_FORMAT));
+        LocalDate statementDate = LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern(DateUtils.DATE_FORMAT));
         return !statementDate.isBefore(fromDate) && !statementDate.isAfter(toDate);
     }
 
     private boolean isStatementInAmountRange(Statement statement, BigDecimal fromAmount, BigDecimal toAmount) {
         BigDecimal statementAmount = SearchUtils.parseAmount(statement.getAmount());
         return statementAmount.compareTo(fromAmount) >= 0 && statementAmount.compareTo(toAmount) <= 0;
+    }
+
+    public Set<StatementDTO> getThreeMonthsBackStatement(Long accountId) {
+        List<Statement> allStatements = statementRepository.findAllStatementsByAccountId(accountId);
+        Set<Statement> filteredStatements = getDefaultStatements(allStatements);
+        log.info("filteredStatements: {}", filteredStatements);
+        return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);
     }
 }
