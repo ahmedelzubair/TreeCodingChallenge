@@ -28,22 +28,24 @@ To run the application using IntelliJ IDEA, follow these steps:
 
 2. In the project directory, locate
    the `src/main/java/sa/com/tree/account/statment/treecodingchallenge/TreeCodingChallengeApplication.java` file, which
-   contains
-   the main application class.
+   contains the main application class.
 
 3. **Right-click on the `TreeCodingChallengeApplication` class** and select "Run '
-   TreeCodingChallengeApplication.main()'." This
-   will start
-   the application.
+   TreeCodingChallengeApplication.main()'." This will start the application.
 
 4. The application should now be running on `http://localhost:8080`.
 
 ## API Endpoints
 The following API endpoints are available under the root path `/api/v1/`:
 
-- `/api/v1/user/login`: Obtain a JWT token for authentication.
+- `/api/v1/user/login`: Obtain a JWT token for authentication. Make sure you are already logged in, and the JWT token is
+  passed in the header.
+
 - `/api/v1/account/{account_id}/statements`: Retrieve account statements for the specified account (
-  replace `{account_id}` with the actual account ID).
+  replace `{account_id}` with the actual account ID). Make sure you are already logged in, and the JWT token is passed
+  in the header. Here is an already-made search URL example you can use in Postman to do a quick
+  search: http://localhost:8080/api/v1/account/3/statements?fromDate=01.07.2000&toDate=08.08.2023&fromAmount=1&toAmount=900000000000
+
 - `/api/v1/user/logout`: Log out and invalidate the session.
 
 **I recommend using Postman for testing these endpoints**, as it provides a user-friendly interface for making API
