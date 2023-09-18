@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > CustomAuthenticationEntryPoint</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.handler</a>
+    </div>
+
+    <h1>Coverage Summary for Class: CustomAuthenticationEntryPoint
+        (sa.com.tree.account.statment.treecodingchallenge.handler)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">CustomAuthenticationEntryPoint</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+                <span class="absValue">
+    (1/2)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    10%
+  </span>
+                <span class="absValue">
+    (1/10)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.handler;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import jakarta.servlet.ServletException;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpServletResponse;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import org.springframework.security.core.AuthenticationException;
+&nbsp;import org.springframework.security.web.AuthenticationEntryPoint;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.utils.ApiResponse;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+&nbsp;public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+&nbsp;
+&nbsp;    private final ObjectMapper objectMapper;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void commence(HttpServletRequest request, HttpServletResponse response,
+&nbsp;                         AuthenticationException authException) throws IOException, ServletException {
+<b class="nc">&nbsp;        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);</b>
+&nbsp;
+<b class="nc">&nbsp;        ApiResponse apiResponse = ApiResponse.builder()</b>
+<b class="nc">&nbsp;                .status(HttpServletResponse.SC_UNAUTHORIZED)</b>
+<b class="nc">&nbsp;                .message(&quot;Authentication failed: &quot; + authException.getMessage())</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        String apiResponseJson = objectMapper.writeValueAsString(apiResponse);</b>
+<b class="nc">&nbsp;        response.setContentType(&quot;application/json&quot;);</b>
+<b class="nc">&nbsp;        response.setCharacterEncoding(&quot;UTF-8&quot;);</b>
+<b class="nc">&nbsp;        response.getWriter().write(apiResponseJson);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>

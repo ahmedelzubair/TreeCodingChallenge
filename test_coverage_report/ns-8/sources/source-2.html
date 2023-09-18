@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > MappingHelper</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.mapper</a>
+    </div>
+
+    <h1>Coverage Summary for Class: MappingHelper (sa.com.tree.account.statment.treecodingchallenge.mapper)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">MappingHelper</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (10/10)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.mapper;
+&nbsp;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.utils.HashingUtils;
+&nbsp;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;public class MappingHelper {
+&nbsp;
+&nbsp;    private MappingHelper() {
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Set&lt;StatementDTO&gt; hashAccountIdAndMapQueryResult(Set&lt;Statement&gt; statements) {
+&nbsp;        // Map and hash the account id before returning the result as StatementDTO
+<b class="fc">&nbsp;        Set&lt;StatementDTO&gt; statementDTOs = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Statement statement : statements) {</b>
+<b class="fc">&nbsp;            StatementDTO statementDTO = new StatementDTO();</b>
+<b class="fc">&nbsp;            statementDTO.setId(statement.getId());</b>
+<b class="fc">&nbsp;            statementDTO.setAccountId(HashingUtils.hash(statement.getAccountId()));</b>
+<b class="fc">&nbsp;            statementDTO.setStatementDate(statement.getDateField());</b>
+<b class="fc">&nbsp;            statementDTO.setAmount(statement.getAmount());</b>
+<b class="fc">&nbsp;            statementDTOs.add(statementDTO);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return statementDTOs;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>

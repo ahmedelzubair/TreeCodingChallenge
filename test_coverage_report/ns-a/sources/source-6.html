@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > StatementService</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.service</a>
+    </div>
+
+    <h1>Coverage Summary for Class: StatementService (sa.com.tree.account.statment.treecodingchallenge.service)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">StatementService</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (12/12)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (51/51)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.service;
+&nbsp;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.apache.commons.lang3.StringUtils;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.exception.StatementSearchException;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.repository.StatementRepository;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.utils.DateUtils;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.utils.SearchUtils;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.validator.SearchCriteriaValidator;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.format.DateTimeFormatter;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class StatementService {
+&nbsp;
+&nbsp;    private final StatementRepository statementRepository;
+&nbsp;    private final SearchCriteriaValidator searchCriteriaValidator;
+&nbsp;
+&nbsp;    public Set&lt;StatementDTO&gt; getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        searchCriteriaValidator.validate(searchCriteriaDTO);</b>
+<b class="fc">&nbsp;        log.info(&quot;[StatementService] Getting statements by criteria: {}&quot;, searchCriteriaDTO);</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;Statement&gt; allStatements = statementRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());</b>
+&nbsp;
+&nbsp;            Set&lt;Statement&gt; filteredStatements;
+<b class="fc">&nbsp;            if (hasValidDateRange(searchCriteriaDTO) &amp;&amp; hasValidAmountRange(searchCriteriaDTO)) {</b>
+<b class="fc">&nbsp;                filteredStatements = filterStatementsByDateAndAmount(allStatements, searchCriteriaDTO);</b>
+<b class="fc">&nbsp;            } else if (hasValidDateRange(searchCriteriaDTO)) {</b>
+<b class="fc">&nbsp;                filteredStatements = filterStatementsByDate(allStatements, searchCriteriaDTO);</b>
+<b class="fc">&nbsp;            } else if (hasValidAmountRange(searchCriteriaDTO)) {</b>
+<b class="fc">&nbsp;                filteredStatements = filterStatementsByAmount(allStatements, searchCriteriaDTO);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                filteredStatements = getDefaultStatements(allStatements);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            log.error(&quot;[StatementService] Error while getting statements by criteria: {} , error: {}&quot;, searchCriteriaDTO, e.getMessage());</b>
+<b class="fc">&nbsp;            throw new StatementSearchException(e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Set&lt;Statement&gt; filterStatementsByDateAndAmount(List&lt;Statement&gt; statements, SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        LocalDate fromDate = SearchUtils.parseDate(searchCriteriaDTO.getFromDate());</b>
+<b class="fc">&nbsp;        LocalDate toDate = SearchUtils.parseDate(searchCriteriaDTO.getToDate());</b>
+<b class="fc">&nbsp;        BigDecimal fromAmount = SearchUtils.parseAmount(searchCriteriaDTO.getFromAmount());</b>
+<b class="fc">&nbsp;        BigDecimal toAmount = SearchUtils.parseAmount(searchCriteriaDTO.getToAmount());</b>
+&nbsp;
+<b class="fc">&nbsp;        return statements.stream()</b>
+<b class="fc">&nbsp;                .filter(statement -&gt; isStatementInDateRange(statement, fromDate, toDate))</b>
+<b class="fc">&nbsp;                .filter(statement -&gt; isStatementInAmountRange(statement, fromAmount, toAmount))</b>
+<b class="fc">&nbsp;                .collect(Collectors.toSet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Set&lt;Statement&gt; filterStatementsByDate(List&lt;Statement&gt; statements, SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        LocalDate fromDate = SearchUtils.parseDate(searchCriteriaDTO.getFromDate());</b>
+<b class="fc">&nbsp;        LocalDate toDate = SearchUtils.parseDate(searchCriteriaDTO.getToDate());</b>
+&nbsp;
+<b class="fc">&nbsp;        return statements.stream()</b>
+<b class="fc">&nbsp;                .filter(statement -&gt; isStatementInDateRange(statement, fromDate, toDate))</b>
+<b class="fc">&nbsp;                .collect(Collectors.toSet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Set&lt;Statement&gt; filterStatementsByAmount(List&lt;Statement&gt; statements, SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        BigDecimal fromAmount = SearchUtils.parseAmount(searchCriteriaDTO.getFromAmount());</b>
+<b class="fc">&nbsp;        BigDecimal toAmount = SearchUtils.parseAmount(searchCriteriaDTO.getToAmount());</b>
+&nbsp;
+<b class="fc">&nbsp;        return statements.stream()</b>
+<b class="fc">&nbsp;                .filter(statement -&gt; isStatementInAmountRange(statement, fromAmount, toAmount))</b>
+<b class="fc">&nbsp;                .collect(Collectors.toSet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Set&lt;Statement&gt; getDefaultStatements(List&lt;Statement&gt; statements) {
+<b class="fc">&nbsp;        LocalDate fromDate = LocalDate.now().minusMonths(3);</b>
+<b class="fc">&nbsp;        LocalDate toDate = LocalDate.now();</b>
+&nbsp;
+<b class="fc">&nbsp;        return statements.stream()</b>
+<b class="fc">&nbsp;                .filter(statement -&gt; isStatementInDateRange(statement, fromDate, toDate))</b>
+<b class="fc">&nbsp;                .collect(Collectors.toSet());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean hasValidDateRange(SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        return StringUtils.isNotEmpty(searchCriteriaDTO.getFromDate()) &amp;&amp;</b>
+<b class="fc">&nbsp;                StringUtils.isNotEmpty(searchCriteriaDTO.getToDate());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean hasValidAmountRange(SearchCriteriaDTO searchCriteriaDTO) {
+<b class="fc">&nbsp;        return StringUtils.isNotEmpty(searchCriteriaDTO.getFromAmount()) &amp;&amp;</b>
+<b class="fc">&nbsp;                StringUtils.isNotEmpty(searchCriteriaDTO.getToAmount());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isStatementInDateRange(Statement statement, LocalDate fromDate, LocalDate toDate) {
+<b class="fc">&nbsp;        LocalDate statementDate = LocalDate.parse(statement.getDateField(), DateTimeFormatter.ofPattern(DateUtils.DATE_FORMAT));</b>
+<b class="fc">&nbsp;        return !statementDate.isBefore(fromDate) &amp;&amp; !statementDate.isAfter(toDate);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isStatementInAmountRange(Statement statement, BigDecimal fromAmount, BigDecimal toAmount) {
+<b class="fc">&nbsp;        BigDecimal statementAmount = SearchUtils.parseAmount(statement.getAmount());</b>
+<b class="fc">&nbsp;        return statementAmount.compareTo(fromAmount) &gt;= 0 &amp;&amp; statementAmount.compareTo(toAmount) &lt;= 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;StatementDTO&gt; getThreeMonthsBackStatement(Long accountId) {
+<b class="fc">&nbsp;        List&lt;Statement&gt; allStatements = statementRepository.findAllStatementsByAccountId(accountId);</b>
+<b class="fc">&nbsp;        Set&lt;Statement&gt; filteredStatements = getDefaultStatements(allStatements);</b>
+<b class="fc">&nbsp;        log.info(&quot;filteredStatements: {}&quot;, filteredStatements);</b>
+<b class="fc">&nbsp;        return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>

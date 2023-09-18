@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > UserService</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.service</a>
+    </div>
+
+    <h1>Coverage Summary for Class: UserService (sa.com.tree.account.statment.treecodingchallenge.service)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">UserService</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (10/10)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (43/43)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.service;
+&nbsp;
+&nbsp;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.core.AuthenticationException;
+&nbsp;import org.springframework.security.core.userdetails.UsernameNotFoundException;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.LoginDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.LoginResponseDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.TokenType;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.entity.Token;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.entity.User;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.exception.LoginException;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.exception.UserAlreadyLoggedInException;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.repository.TokenRepository;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.repository.UserRepository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class UserService {
+&nbsp;
+&nbsp;    private final UserRepository repository;
+&nbsp;    private final TokenRepository tokenRepository;
+&nbsp;    private final JwtService jwtService;
+&nbsp;    private final AuthenticationManager authenticationManager;
+&nbsp;    private final SessionManagementService sessionManagementService;
+&nbsp;
+&nbsp;    public LoginResponseDTO login(LoginDTO request, HttpSession session) {
+<b class="fc">&nbsp;        String username = request.getUsername();</b>
+<b class="fc">&nbsp;        validateUserNotLoggedIn(username);</b>
+<b class="fc">&nbsp;        log.info(&quot;[UserService] Authenticating user: {}&quot;, username);</b>
+<b class="fc">&nbsp;        authenticateUser(request);</b>
+<b class="fc">&nbsp;        log.info(&quot;[UserService] User: {} successfully authenticated&quot;, username);</b>
+<b class="fc">&nbsp;        User user = findUserByUsername(username);</b>
+<b class="fc">&nbsp;        String jwtToken = jwtService.generateToken(user);</b>
+<b class="fc">&nbsp;        revokeAllUserTokens(user);</b>
+<b class="fc">&nbsp;        log.info(&quot;[UserService] All user tokens revoked for user: {}&quot;, username);</b>
+<b class="fc">&nbsp;        saveUserToken(user, jwtToken);</b>
+<b class="fc">&nbsp;        sessionManagementService.addSession(username, session);</b>
+<b class="fc">&nbsp;        log.info(&quot;[UserService] User: {} successfully logged in&quot;, username);</b>
+<b class="fc">&nbsp;        return buildLoginResponse(jwtToken);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private void validateUserNotLoggedIn(String username) {
+<b class="fc">&nbsp;        if (sessionManagementService.isUserLoggedIn(username)) {</b>
+<b class="fc">&nbsp;            throw new UserAlreadyLoggedInException(&quot;User is already logged in. Please log out before attempting to log in again.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void authenticateUser(LoginDTO request) {
+&nbsp;        try {
+<b class="fc">&nbsp;            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));</b>
+<b class="fc">&nbsp;        } catch (AuthenticationException ex) {</b>
+<b class="fc">&nbsp;            log.error(&quot;[UserService] Authentication failed for user: {} with exception: {}&quot;, request.getUsername(), ex.getMessage());</b>
+<b class="fc">&nbsp;            throw new LoginException(&quot;Incorrect username or password. Please try again.&quot;);</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            log.error(&quot;[UserService] Authentication failed for user: {} with exception: {}&quot;, request.getUsername(), e.getMessage());</b>
+<b class="fc">&nbsp;            throw new LoginException(&quot;Error while authenticating user. Please try again.&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private User findUserByUsername(String username) {
+<b class="fc">&nbsp;        return repository.findByUsername(username)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void revokeAllUserTokens(User user) {
+<b class="fc">&nbsp;        List&lt;Token&gt; validUserTokens = tokenRepository.findAllValidTokenByUser(user.getUsername());</b>
+<b class="fc">&nbsp;        validUserTokens.forEach(token -&gt; {</b>
+<b class="fc">&nbsp;            token.setExpired(true);</b>
+<b class="fc">&nbsp;            token.setRevoked(true);</b>
+&nbsp;        });
+<b class="fc">&nbsp;        tokenRepository.saveAll(validUserTokens);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void saveUserToken(User user, String jwtToken) {
+<b class="fc">&nbsp;        Token token = Token.builder()</b>
+<b class="fc">&nbsp;                .user(user)</b>
+<b class="fc">&nbsp;                .jwtToken(jwtToken)</b>
+<b class="fc">&nbsp;                .tokenType(TokenType.BEARER)</b>
+<b class="fc">&nbsp;                .expired(false)</b>
+<b class="fc">&nbsp;                .revoked(false)</b>
+<b class="fc">&nbsp;                .build();</b>
+<b class="fc">&nbsp;        tokenRepository.save(token);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private LoginResponseDTO buildLoginResponse(String accessToken) {
+<b class="fc">&nbsp;        return LoginResponseDTO.builder()</b>
+<b class="fc">&nbsp;                .accessToken(accessToken)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>

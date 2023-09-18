@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > SearchCriteriaValidator</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.validator</a>
+    </div>
+
+    <h1>Coverage Summary for Class: SearchCriteriaValidator
+        (sa.com.tree.account.statment.treecodingchallenge.validator)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">SearchCriteriaValidator</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+                <span class="absValue">
+    (1/2)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    7.7%
+  </span>
+                <span class="absValue">
+    (1/13)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.validator;
+&nbsp;
+&nbsp;import org.apache.commons.lang3.StringUtils;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.exception.InvalidSearchCriteriaException;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class SearchCriteriaValidator {</b>
+&nbsp;
+&nbsp;
+&nbsp;    public void validate(SearchCriteriaDTO searchCriteriaDTO) {
+&nbsp;        // search criteria must be provided
+<b class="nc">&nbsp;        if (searchCriteriaDTO == null)</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Invalid search criteria&quot;);</b>
+&nbsp;
+&nbsp;        // account id must be provided
+<b class="nc">&nbsp;        if (searchCriteriaDTO.getAccountId() == null || searchCriteriaDTO.getAccountId() &lt;= 0)</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Please specify account id&quot;);</b>
+&nbsp;
+&nbsp;        // if user provide from date then to date must be provided
+<b class="nc">&nbsp;        if (StringUtils.isNotEmpty(searchCriteriaDTO.getFromDate()) &amp;&amp; (StringUtils.isEmpty(searchCriteriaDTO.getToDate())))</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Please specify to date&quot;);</b>
+&nbsp;
+&nbsp;        // if user provide to date then from date must be provided
+<b class="nc">&nbsp;        if (StringUtils.isNotEmpty(searchCriteriaDTO.getToDate()) &amp;&amp; (StringUtils.isEmpty(searchCriteriaDTO.getFromDate())))</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Please specify from date&quot;);</b>
+&nbsp;
+&nbsp;        // if user provide from amount then to amount must be provided
+<b class="nc">&nbsp;        if (StringUtils.isNotEmpty(searchCriteriaDTO.getFromAmount()) &amp;&amp; StringUtils.isEmpty(searchCriteriaDTO.getToAmount()))</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Please specify to amount&quot;);</b>
+&nbsp;
+&nbsp;        // if user provide to amount then from amount must be provided
+<b class="nc">&nbsp;        if (StringUtils.isNotEmpty(searchCriteriaDTO.getToAmount()) &amp;&amp; StringUtils.isEmpty(searchCriteriaDTO.getFromAmount()))</b>
+<b class="nc">&nbsp;            throw new InvalidSearchCriteriaException(&quot;Please specify from amount&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>

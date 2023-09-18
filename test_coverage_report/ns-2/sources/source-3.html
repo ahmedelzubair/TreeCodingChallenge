@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>Coverage Report > JwtAuthenticationFilter</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script type="text/javascript" src="../../js/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">sa.com.tree.account.statment.treecodingchallenge.config</a>
+    </div>
+
+    <h1>Coverage Summary for Class: JwtAuthenticationFilter
+        (sa.com.tree.account.statment.treecodingchallenge.config)</h1>
+
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Class, %
+            </th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">JwtAuthenticationFilter</td>
+            <td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+                <span class="absValue">
+    (1/1)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+                <span class="absValue">
+    (1/3)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    5.3%
+  </span>
+                <span class="absValue">
+    (1/19)
+  </span>
+            </td>
+        </tr>
+
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sa.com.tree.account.statment.treecodingchallenge.config;
+&nbsp;
+&nbsp;import jakarta.servlet.FilterChain;
+&nbsp;import jakarta.servlet.ServletException;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpServletResponse;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.lang.NonNull;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.springframework.security.core.userdetails.UserDetailsService;
+&nbsp;import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.filter.OncePerRequestFilter;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.repository.TokenRepository;
+&nbsp;import sa.com.tree.account.statment.treecodingchallenge.service.JwtService;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class JwtAuthenticationFilter extends OncePerRequestFilter {
+&nbsp;
+&nbsp;    private final JwtService jwtService;
+&nbsp;    private final UserDetailsService userDetailsService;
+&nbsp;    private final TokenRepository tokenRepository;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+&nbsp;                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+&nbsp;
+&nbsp;        // Skip filtering for login endpoint
+<b class="nc">&nbsp;        if (request.getServletPath().contains(&quot;/api/v1/user/login&quot;)) {</b>
+<b class="nc">&nbsp;            filterChain.doFilter(request, response);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        final String authHeader = request.getHeader(&quot;Authorization&quot;);</b>
+&nbsp;
+&nbsp;        // Check for valid Authorization header
+<b class="nc">&nbsp;        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</b>
+<b class="nc">&nbsp;            filterChain.doFilter(request, response);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        final String jwt = authHeader.substring(7);</b>
+<b class="nc">&nbsp;        final String userEmail = jwtService.extractUsername(jwt);</b>
+&nbsp;
+&nbsp;        // Check if the token is valid and belongs to the user
+<b class="nc">&nbsp;        if (userEmail != null &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == null) {</b>
+<b class="nc">&nbsp;            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (jwtService.isTokenBelongsToUser(jwt, userDetails) &amp;&amp; isTokenValid(jwt)) {</b>
+<b class="nc">&nbsp;                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(</b>
+&nbsp;                        userDetails,
+&nbsp;                        null,
+<b class="nc">&nbsp;                        userDetails.getAuthorities());</b>
+<b class="nc">&nbsp;                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));</b>
+<b class="nc">&nbsp;                SecurityContextHolder.getContext().setAuthentication(authToken);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        filterChain.doFilter(request, response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isTokenValid(String jwt) {
+<b class="nc">&nbsp;        return tokenRepository.findByToken(jwt)</b>
+<b class="nc">&nbsp;                .map(t -&gt; !t.isExpired() &amp;&amp; !t.isRevoked())</b>
+<b class="nc">&nbsp;                .orElse(false);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+            hljs.highlightAll()
+            hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2023-09-18 21:37</div>
+</div>
+</body>
+</html>
