@@ -30,7 +30,8 @@ To run the application using IntelliJ IDEA, follow these steps:
    the `src/main/java/sa/com/tree/account/statment/treecodingchallenge/StatementsApplication.java` file, which contains
    the main application class.
 
-3. **Right-click on the `StatementsApplication` class** and select "Run 'StatementsApplication.main()'." This will start
+3. **Right-click on the `TreeCodingChallengeApplication` class** and select "Run 'StatementsApplication.main()'." This
+   will start
    the application.
 
 4. The application should now be running on `http://localhost:8080`.
