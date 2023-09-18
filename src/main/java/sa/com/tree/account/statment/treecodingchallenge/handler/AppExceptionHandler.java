@@ -106,4 +106,15 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(StatementSearchException.class)
+    public ResponseEntity<ApiResponse> handleStatementSearchException(StatementSearchException statementSearchException) {
+        log.error("[StatementSearchException] Statement search failed with message : {}", statementSearchException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(500)
+                .timestamp(LocalDateTime.now())
+                .message("Error while getting statements. Please try again.")
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

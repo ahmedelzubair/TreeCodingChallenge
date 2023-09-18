@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
+import sa.com.tree.account.statment.treecodingchallenge.exception.StatementSearchException;
 import sa.com.tree.account.statment.treecodingchallenge.mapper.MappingHelper;
 import sa.com.tree.account.statment.treecodingchallenge.repository.StatementRepository;
 import sa.com.tree.account.statment.treecodingchallenge.utils.DateUtils;
@@ -30,20 +31,24 @@ public class StatementService {
 
     public Set<StatementDTO> getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         searchCriteriaValidator.validate(searchCriteriaDTO);
+        try {
+            List<Statement> allStatements = statementRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
 
-        List<Statement> allStatements = statementRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
-
-        Set<Statement> filteredStatements;
-        if (hasValidDateRange(searchCriteriaDTO) && hasValidAmountRange(searchCriteriaDTO)) {
-            filteredStatements = filterStatementsByDateAndAmount(allStatements, searchCriteriaDTO);
-        } else if (hasValidDateRange(searchCriteriaDTO)) {
-            filteredStatements = filterStatementsByDate(allStatements, searchCriteriaDTO);
-        } else if (hasValidAmountRange(searchCriteriaDTO)) {
-            filteredStatements = filterStatementsByAmount(allStatements, searchCriteriaDTO);
-        } else {
-            filteredStatements = getDefaultStatements(allStatements);
+            Set<Statement> filteredStatements;
+            if (hasValidDateRange(searchCriteriaDTO) && hasValidAmountRange(searchCriteriaDTO)) {
+                filteredStatements = filterStatementsByDateAndAmount(allStatements, searchCriteriaDTO);
+            } else if (hasValidDateRange(searchCriteriaDTO)) {
+                filteredStatements = filterStatementsByDate(allStatements, searchCriteriaDTO);
+            } else if (hasValidAmountRange(searchCriteriaDTO)) {
+                filteredStatements = filterStatementsByAmount(allStatements, searchCriteriaDTO);
+            } else {
+                filteredStatements = getDefaultStatements(allStatements);
+            }
+            return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);
+        } catch (Exception e) {
+            log.error("[StatementService] Error while getting statements by criteria: {} , error: {}", searchCriteriaDTO, e.getMessage());
+            throw new StatementSearchException(e);
         }
-        return MappingHelper.hashAccountIdAndMapQueryResult(filteredStatements);
     }
 
     private Set<Statement> filterStatementsByDateAndAmount(List<Statement> statements, SearchCriteriaDTO searchCriteriaDTO) {
