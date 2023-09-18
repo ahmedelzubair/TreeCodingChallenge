@@ -17,7 +17,8 @@ statements. Security is ensured with JWT tokens. Here are the key points:
 
 ## Project Structure
 
-The project follows a structured layout, including packages for authentication, controllers, database, exceptions, and
+The project follows a structured layout, including packages for config, controllers, service, repository, exceptions,
+and
 more.
 
 ## Running the Application with IntelliJ IDEA
