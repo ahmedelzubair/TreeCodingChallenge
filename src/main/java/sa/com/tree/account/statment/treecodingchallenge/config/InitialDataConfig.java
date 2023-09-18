@@ -3,8 +3,8 @@ package sa.com.tree.account.statment.treecodingchallenge.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sa.com.tree.account.statment.treecodingchallenge.dto.RegistrationDTO;
-import sa.com.tree.account.statment.treecodingchallenge.service.UserService;
+import sa.com.tree.account.statment.treecodingchallenge.entity.User;
+import sa.com.tree.account.statment.treecodingchallenge.repository.UserRepository;
 
 import static sa.com.tree.account.statment.treecodingchallenge.dto.Role.ADMIN;
 import static sa.com.tree.account.statment.treecodingchallenge.dto.Role.USER;
@@ -14,20 +14,20 @@ public class InitialDataConfig {
 
 
     @Bean
-    public CommandLineRunner commandLineRunner(UserService service) {
+    public CommandLineRunner commandLineRunner(UserRepository repository) {
         return args -> {
-            var admin = RegistrationDTO.builder()
+            var admin = User.builder()
                     .username("admin")
                     .password("admin")
                     .role(ADMIN)
                     .build();
-            service.addNewUser(admin);
-            var user = RegistrationDTO.builder()
+            repository.save(admin);
+            var user = User.builder()
                     .username("user")
                     .password("user")
                     .role(USER)
                     .build();
-            service.addNewUser(user);
+            repository.save(user);
         };
     }
 

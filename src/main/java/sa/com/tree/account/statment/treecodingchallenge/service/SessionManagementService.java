@@ -22,4 +22,8 @@ public class SessionManagementService {
     public boolean isUserLoggedIn(String username) {
         return userSessions.containsKey(username);
     }
+
+    public Object getSession(String username) {
+        return userSessions.get(username);
+    }
 }

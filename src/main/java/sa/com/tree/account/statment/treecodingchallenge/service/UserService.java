@@ -8,11 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sa.com.tree.account.statment.treecodingchallenge.dto.LoginDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.LoginResponseDTO;
-import sa.com.tree.account.statment.treecodingchallenge.dto.RegistrationDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.TokenType;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Token;
 import sa.com.tree.account.statment.treecodingchallenge.entity.User;
@@ -30,22 +28,9 @@ public class UserService {
 
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final SessionManagementService sessionManagementService;
-
-    public User addNewUser(RegistrationDTO request) {
-        log.info("[UserService] Registering new user: {} , request: {}", request.getUsername(), request);
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
-        User savedUser = repository.save(user);
-        log.info("[UserService] New user: {} successfully registered", user.getUsername());
-        return savedUser;
-    }
 
     public LoginResponseDTO login(LoginDTO request, HttpSession session) {
         String username = request.getUsername();
@@ -76,6 +61,9 @@ public class UserService {
         } catch (AuthenticationException ex) {
             log.error("[UserService] Authentication failed for user: {} with exception: {}", request.getUsername(), ex.getMessage());
             throw new LoginException("Incorrect username or password. Please try again.");
+        } catch (Exception e) {
+            log.error("[UserService] Authentication failed for user: {} with exception: {}", request.getUsername(), e.getMessage());
+            throw new LoginException("Error while authenticating user. Please try again.");
         }
     }
 

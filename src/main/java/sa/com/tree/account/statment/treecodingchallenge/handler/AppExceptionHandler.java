@@ -3,6 +3,7 @@ package sa.com.tree.account.statment.treecodingchallenge.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -115,6 +116,30 @@ public class AppExceptionHandler {
                 .message("Error while getting statements. Please try again.")
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //SessionExpiredException
+    @ExceptionHandler(SessionExpiredException.class)
+    public ResponseEntity<ApiResponse> handleSessionExpiredException(SessionExpiredException sessionExpiredException) {
+        log.error("[SessionExpiredException] Session expired with message : {}", sessionExpiredException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(403)
+                .timestamp(LocalDateTime.now())
+                .message("Session expired. Please login again.")
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
+    }
+
+    //UsernameNotFoundException
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleUsernameNotFoundException(UsernameNotFoundException usernameNotFoundException) {
+        log.error("[UsernameNotFoundException] Username not found with message : {}", usernameNotFoundException.getMessage());
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(404)
+                .timestamp(LocalDateTime.now())
+                .message("Incorrect username or password. Please try again.")
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
 }
