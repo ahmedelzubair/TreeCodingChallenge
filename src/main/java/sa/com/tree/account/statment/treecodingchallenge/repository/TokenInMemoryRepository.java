@@ -19,7 +19,7 @@ public class TokenInMemoryRepository implements TokenRepository {
 
     @Override
     public Optional<Token> findByToken(String token) {
-        return tokens.values().stream().filter(t -> t.getToken().equals(token)).findFirst();
+        return tokens.values().stream().filter(t -> t.getJwtToken().equals(token)).findFirst();
     }
 
     @Override

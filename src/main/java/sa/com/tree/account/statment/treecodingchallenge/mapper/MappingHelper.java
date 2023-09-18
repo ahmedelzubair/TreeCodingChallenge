@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class MappingHelper {
 
+    private MappingHelper() {
+    }
 
     public static Set<StatementDTO> hashAccountIdAndMapQueryResult(Set<Statement> statements) {
         // Map and hash the account id before returning the result as StatementDTO

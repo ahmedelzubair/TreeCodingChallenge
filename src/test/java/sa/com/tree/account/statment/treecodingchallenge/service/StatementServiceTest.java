@@ -1,10 +1,10 @@
 package sa.com.tree.account.statment.treecodingchallenge.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sa.com.tree.account.statment.treecodingchallenge.dto.SearchCriteriaDTO;
 import sa.com.tree.account.statment.treecodingchallenge.dto.StatementDTO;
 import sa.com.tree.account.statment.treecodingchallenge.entity.Statement;
@@ -21,7 +21,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StatementServiceTest {
+@ExtendWith(MockitoExtension.class)
+class StatementServiceTest {
 
     @Mock
     private StatementRepository statementRepository;
@@ -31,11 +32,6 @@ public class StatementServiceTest {
 
     @InjectMocks
     private StatementService statementService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testGetStatementsByCriteria_WithValidData() {

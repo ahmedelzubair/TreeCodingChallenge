@@ -24,7 +24,7 @@ public class User implements UserDetails {
     private String password;
     private Role role;
     @JsonIgnore
-    private List<Token> tokens;
+    private transient List<Token> tokens;
 
     @JsonIgnore
     @Override

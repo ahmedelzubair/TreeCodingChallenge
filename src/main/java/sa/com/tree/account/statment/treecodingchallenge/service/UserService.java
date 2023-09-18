@@ -84,7 +84,7 @@ public class UserService {
     private void saveUserToken(User user, String jwtToken) {
         Token token = Token.builder()
                 .user(user)
-                .token(jwtToken)
+                .jwtToken(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)

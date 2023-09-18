@@ -13,7 +13,7 @@ import sa.com.tree.account.statment.treecodingchallenge.dto.TokenType;
 public class Token {
 
     private Integer id;
-    private String token;
+    private String jwtToken;
     private TokenType tokenType = TokenType.BEARER;
     private boolean revoked;
     private boolean expired;

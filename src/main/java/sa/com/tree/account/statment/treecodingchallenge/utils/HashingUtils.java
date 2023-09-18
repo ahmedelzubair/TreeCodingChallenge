@@ -9,6 +9,9 @@ import java.security.MessageDigest;
 @Slf4j
 public class HashingUtils {
 
+    private HashingUtils() {
+    }
+
     public static String hash(Long accountNumber) {
         try {
             if (accountNumber == null) {

@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 public class SearchUtils {
 
+    private SearchUtils() {
+    }
 
     public static boolean isEmptySearchCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         return isEmpty(searchCriteriaDTO.getFromDate()) && isEmpty(searchCriteriaDTO.getToDate())
