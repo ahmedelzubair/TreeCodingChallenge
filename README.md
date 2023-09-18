@@ -61,7 +61,7 @@ The following API endpoints are available under the root path `/api/v1/`:
 - `/api/v1/user/logout`: Log out and invalidate the session.
 
 **I recommend using Postman for testing these endpoints**, as it provides a user-friendly interface for making API
-requests. You can import the provided collection for easy testing.
+requests.
 
 ## Unit Testing
 Run `mvn clean test` to execute unit tests with coverage reports.
