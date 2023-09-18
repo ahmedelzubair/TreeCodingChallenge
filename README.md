@@ -39,12 +39,23 @@ To run the application using IntelliJ IDEA, follow these steps:
 ## API Endpoints
 The following API endpoints are available under the root path `/api/v1/`:
 
-- `/api/v1/user/login`: Obtain a JWT token for authentication. Make sure you are already logged in, and the JWT token is
-  passed in the header.
+- `/api/v1/user/login`: Obtain a JWT token for authentication. You can use the following pre-authenticated users to log
+  in to the application for testing purposes:
+
+  ### Admin User
+
+    - **Username:** admin
+    - **Password:** admin
+
+  ### Regular User
+
+    - **Username:** user
+    - **Password:** user
+
 
 - `/api/v1/account/{account_id}/statements`: Retrieve account statements for the specified account (
   replace `{account_id}` with the actual account ID). Make sure you are already logged in, and the JWT token is passed
-  in the header. Here is an already-made search URL example you can use in Postman to do a quick
+  in the Authorization header. Here is an already-made search URL example you can use in Postman to do a quick
   search: http://localhost:8080/api/v1/account/3/statements?fromDate=01.07.2000&toDate=08.08.2023&fromAmount=1&toAmount=900000000000
 
 - `/api/v1/user/logout`: Log out and invalidate the session.
@@ -69,5 +80,4 @@ https://sonarcloud.io/project/overview?id=ahmedelzubair_TreeCodingChallenge
 
 Test coverage report is available in the [test_coverage_report](test_coverage_report) directory.
 
-If you have any questions or need further assistance, please feel free to reach out. Thank you for checking out my
-completed Java assignment!
+If you have any questions or need further assistance, please feel free to reach out. Thank you for checking out my work!
