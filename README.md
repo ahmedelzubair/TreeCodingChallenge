@@ -62,7 +62,8 @@ Run `mvn clean test` to execute unit tests with coverage reports.
 
 ## SonarQube Report
 
-I have attached the SonarQube Report in the `sonar_qube` directory.
+Here is the SonarQube report for the project:
+https://sonarcloud.io/project/overview?id=ahmedelzubair_TreeCodingChallenge
 
 If you have any questions or need further assistance, please feel free to reach out. Thank you for checking out my
 completed Java assignment!
