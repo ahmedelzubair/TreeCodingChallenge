@@ -36,6 +36,7 @@ public class UserService {
     private final SessionManagementService sessionManagementService;
 
     public User addNewUser(RegistrationDTO request) {
+        log.info("[UserService] Registering new user: {} , request: {}", request.getUsername(), request);
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -49,6 +50,7 @@ public class UserService {
     public LoginResponseDTO login(LoginDTO request, HttpSession session) {
         String username = request.getUsername();
         validateUserNotLoggedIn(username);
+        log.info("[UserService] Authenticating user: {}", username);
         authenticateUser(request);
         log.info("[UserService] User: {} successfully authenticated", username);
         User user = findUserByUsername(username);

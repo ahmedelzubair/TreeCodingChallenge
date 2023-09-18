@@ -34,7 +34,6 @@ public class AccountStatementService {
     }
 
     public ResponseEntity<ApiResponse> handleUserRequest(Long accountId) {
-        // Implement logic to get the three months back statement for the user.
         Set<StatementDTO> statements = statementService.getThreeMonthsBackStatement(accountId);
         return createResponse(statements);
     }

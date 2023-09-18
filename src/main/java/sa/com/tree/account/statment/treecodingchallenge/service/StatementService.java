@@ -31,6 +31,7 @@ public class StatementService {
 
     public Set<StatementDTO> getStatementsByCriteria(SearchCriteriaDTO searchCriteriaDTO) {
         searchCriteriaValidator.validate(searchCriteriaDTO);
+        log.info("[StatementService] Getting statements by criteria: {}", searchCriteriaDTO);
         try {
             List<Statement> allStatements = statementRepository.findAllStatementsByAccountId(searchCriteriaDTO.getAccountId());
 
