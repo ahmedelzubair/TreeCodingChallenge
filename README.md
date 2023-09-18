@@ -68,7 +68,7 @@ Run `mvn clean test` to execute unit tests with coverage reports.
 
 ## Security
 
-- I have OAuth with JWT tokens to maintain the app security.
+- I have used OAuth with JWT tokens to maintain the app security.
 - In-memory database manages user login and session information. can be replaced with real database.
 - Tokens expire after 5 minutes.
 
