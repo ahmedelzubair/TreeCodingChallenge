@@ -27,10 +27,12 @@ To run the application using IntelliJ IDEA, follow these steps:
 1. **Clone my repository**: First, clone my repository to your local machine using IntelliJ IDEA.
 
 2. In the project directory, locate
-   the `src/main/java/sa/com/tree/account/statment/treecodingchallenge/StatementsApplication.java` file, which contains
+   the `src/main/java/sa/com/tree/account/statment/treecodingchallenge/TreeCodingChallengeApplication.java` file, which
+   contains
    the main application class.
 
-3. **Right-click on the `TreeCodingChallengeApplication` class** and select "Run 'StatementsApplication.main()'." This
+3. **Right-click on the `TreeCodingChallengeApplication` class** and select "Run '
+   TreeCodingChallengeApplication.main()'." This
    will start
    the application.
 
