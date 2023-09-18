@@ -13,8 +13,6 @@ import sa.com.tree.account.statment.treecodingchallenge.exception.InvalidJWTExce
 import sa.com.tree.account.statment.treecodingchallenge.exception.LogoutException;
 import sa.com.tree.account.statment.treecodingchallenge.repository.TokenRepository;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -49,21 +47,6 @@ public class LogoutService implements LogoutHandler {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
-            sessionManagementService.removeSession(username);
-            SecurityContextHolder.clearContext();
-        } else {
-            throw new InvalidJWTException("Invalid JWT token");
-        }
-    }
-
-    public void logoutUserByUsername(String username) {
-        List<Token> userTokens = tokenRepository.findAllValidTokenByUser(username);
-        if (userTokens != null) {
-            userTokens.forEach(token -> {
-                token.setExpired(true);
-                token.setRevoked(true);
-            });
-            tokenRepository.saveAll(userTokens);
             sessionManagementService.removeSession(username);
             SecurityContextHolder.clearContext();
         } else {

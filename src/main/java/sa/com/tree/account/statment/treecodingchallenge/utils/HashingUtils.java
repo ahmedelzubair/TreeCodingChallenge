@@ -9,6 +9,8 @@ import java.security.MessageDigest;
 @Slf4j
 public class HashingUtils {
 
+    private static final String ALGORITHM = "SHA-256";
+
     private HashingUtils() {
     }
 
@@ -17,8 +19,8 @@ public class HashingUtils {
             if (accountNumber == null) {
                 throw new HashingException("Account number is null");
             }
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(String.valueOf(accountNumber).getBytes(StandardCharsets.UTF_8));
+            MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
+            byte[] hashBytes = digest.digest(java.lang.String.valueOf(accountNumber).getBytes(StandardCharsets.UTF_8));
             return bytesToHex(hashBytes);
         } catch (Exception e) {
             log.error("[HashingUtils] Error while hashing account number: {} , error: {}", accountNumber, e.getMessage());

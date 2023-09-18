@@ -377,5 +377,52 @@ class StatementServiceTest {
         }
         return statements;
     }
+
+    @Test
+    void shouldFilterStatementsByAmountRange() {
+        // Create a sample search criteria using the builder pattern
+        SearchCriteriaDTO searchCriteriaDTO = SearchCriteriaDTO.builder()
+                .fromAmount("10.00")
+                .toAmount("20.00")
+                .accountId(1L)
+                .build();
+
+        // Create a list of sample statements using the builder pattern
+        List<Statement> allStatements = new ArrayList<>();
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("15.00").build());
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("5.00").build());
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("25.00").build());
+
+        // Mock the behavior of the statementRepository
+        when(statementRepository.findAllStatementsByAccountId(1L)).thenReturn(allStatements);
+
+        // Call the method under test
+        Set<StatementDTO> result = statementService.getStatementsByCriteria(searchCriteriaDTO);
+
+        // Verify the result
+        assertEquals(1, result.size()); // Only one statement should meet the criteria
+    }
+
+    @Test
+    void shouldGetDefaultStatementsWhenNoDateOrAmountRangeIsValid() {
+        // Create a sample search criteria with no valid date or amount range using the builder pattern
+        SearchCriteriaDTO searchCriteriaDTO = SearchCriteriaDTO.builder().accountId(1L).build();
+
+        // Create a list of sample statements using the builder pattern
+        List<Statement> allStatements = new ArrayList<>();
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("15.00").build());
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("5.00").build());
+        allStatements.add(Statement.builder().accountId(1L).dateField("01.09.2023").amount("25.00").build());
+
+        // Mock the behavior of the statementRepository
+        when(statementRepository.findAllStatementsByAccountId(1L)).thenReturn(allStatements);
+
+        // Call the method under test
+        Set<StatementDTO> result = statementService.getStatementsByCriteria(searchCriteriaDTO);
+
+        // Verify the result
+        assertEquals(allStatements.size(), result.size()); // All statements should be returned
+    }
+
 }
 
